@@ -1,0 +1,26 @@
+name: build
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '17.x'
+
+    - name: Install dependencies
+      working-directory: web
+      run: npm install
+
+    - name: Run Unit Tests
+      working-directory: web
+      run: npm test
+
+    - name: Build the Docker image and push to AWS ECR
+      working-directory: web
+      run: docker build -t fisnik .
